@@ -5,7 +5,7 @@
  * free_listint_t - frees a linked list
  * @head: pointer to the first node
  */
-void free_listint_t(listint_t *head)
+void free_listint(listint_t *head)
 {
 	listint_t *next_node;
 
