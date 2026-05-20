@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdlib.h>
 #include "main.h"
 
 /**
@@ -11,19 +12,36 @@
  */
 ssize_t read_textfile(const char *filename, size_t letters)
 {
-	char buff[1024];
-	ssize_t count;
+	char *buff;
+	ssize_t n_written, n_read;
 	int fd;
 
-	fd = open(filename, O_RDONLY);
 	if (filename == NULL)
 		return (0);
-	count = read(fd, buff, letters);
-	if (count == -1)
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
 		return (0);
-
-	count = write(1, buff, count);
-	if (count == -1)
+	buff = malloc(sizeof(char) * letters);
+	if (buff == NULL)
+	{
+		close(fd);
 		return (0);
-	return (count);
+	}
+	n_read = read(fd, buff, letters);
+	if (n_read == -1)
+	{
+		free(buff);
+		close(fd);
+		return (0);
+	}
+	n_written = write(1, buff, n_read);
+	if (n_written == -1)
+	{
+		free(buff);
+		close(fd);
+		return (0);
+	}
+	free(buff);
+	close(fd);
+	return (n_written);
 }

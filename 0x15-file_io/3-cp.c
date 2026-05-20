@@ -28,7 +28,7 @@ int main(int ac, char **av)
 		dprintf(2, "Error: Can't read from file %s\n", av[1]);
 		exit(98);
 	}
-	fd_fileto = open(av[2], O_WRONLY | O_CREAT | O_APPEND, 0664);
+	fd_fileto = open(av[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (fd_fileto == -1)
 	{
 		dprintf(2, "Error: Can't write to %s\n", av[2]);
@@ -44,6 +44,13 @@ int main(int ac, char **av)
 			exit(99);
 		}
 	}
+	if (read_byte == -1)
+	{
+		dprintf(2, "Error: Can't read from file %s\n", av[1]);
+		close(fd_filefrom);
+		close(fd_fileto);
+		exit(98);
+	}
 	fc1 = close(fd_fileto);
 	if (fc1 == -1)
 	{
@@ -56,5 +63,5 @@ int main(int ac, char **av)
 		dprintf(2, "Error: Can't close fd %d\n", fd_filefrom);
 		exit(100);
 	}
-	return (1);
+	return (0);
 }
